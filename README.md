@@ -61,7 +61,7 @@
 
 <br/>
 
-#### [Seung-Soo Shin](https://github.com/KimSilverStar)
+#### [Seung-Soo Shin](https://github.com/GoojungMyeon)
 
 -   Blog:
 -   Email: tmd0707@naver.com
