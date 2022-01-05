@@ -4,7 +4,7 @@
 <br/>
 
 ## 😎 일주일에 12문제 풀기 도전!
-1. 일주일에 인당 4문제 씩 해당 주차의 유형 내에서 문제 제출
+1. 일주일에 인당 3문제 씩 해당 주차의 유형 내에서 문제 제출
 
 -   너무 쉬운 Bronze 문제는 제출 금지
 -   수학, 기하학 같은 문제는 제출 금지
@@ -65,6 +65,18 @@
 
 -   Blog:
 -   Email: tmd0707@naver.com
+
+#### [정상 Lim](https://github.com/)
+
+-   Blog: 
+-   Email: 
+
+<br/>
+
+#### [태언 Park](https://github.com/)
+
+-   Blog: 
+-   Email: 
 
 <br/>
 <br/>
