@@ -75,7 +75,7 @@
 
 <br/>
 
-#### [태언 Park](https://github.com/)
+#### [Taeeon Park](https://github.com/)
 
 -   Blog: 
 -   Email: 
