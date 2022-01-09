@@ -68,7 +68,7 @@
 
 <br/>
 
-#### [정상 Lim](https://github.com/)
+#### [Jeongsang Im](https://github.com/Oneul1213)
 
 -   Blog: 
 -   Email: 
