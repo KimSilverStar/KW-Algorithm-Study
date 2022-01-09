@@ -70,8 +70,8 @@
 
 #### [Jeongsang Im](https://github.com/Oneul1213)
 
--   Blog: 
--   Email: 
+-   Blog: https://velog.io/@oneul1213
+-   Email: toda1213@naver.com
 
 <br/>
 
