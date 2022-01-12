@@ -5,8 +5,10 @@ import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -20,50 +22,39 @@ public class Main {
             var N = parseInt(st.nextToken());
             var K = parseInt(st.nextToken());
             var buildCosts = new int[N + 1];
-            var preCosts = new int[N + 1];
-            var q = new PriorityQueue<Build>(((o1, o2) -> {
-                if (o1.level == o2.level)
-                    return o1.preLevel - o2.preLevel;
-                return o1.level - o2.level;
-            }));
+            var map = new LinkedHashMap<Integer, List<Integer>>();
 
             st = new StringTokenizer(br.readLine());
             for (int i = 1; st.hasMoreTokens(); i++) {
                 buildCosts[i] = parseInt(st.nextToken());
             }
             for (int i = 0; i < K; i++) {
-                q.offer(new Build(br.readLine()));
+                st = new StringTokenizer(br.readLine());
+                var preLevel = parseInt(st.nextToken());
+                var level = parseInt(st.nextToken());
+                if (!map.containsKey(level)) {
+                    var list = new ArrayList<Integer>();
+                    list.add(preLevel);
+                    map.put(level, list);
+                } else
+                    map.get(level).add(preLevel);
             }
             var W = parseInt(br.readLine());
-            while (!q.isEmpty()) {
-                var build = q.poll();
-                if (preCosts[build.level] < preCosts[build.preLevel] + buildCosts[build.preLevel]) {
-                    preCosts[build.level] = preCosts[build.preLevel] + buildCosts[build.preLevel];
-                }
-            }
-            sb.append(buildCosts[W] + preCosts[W]).append('\n');
-            System.out.println("buildCosts = " + Arrays.toString(buildCosts));
-            System.out.println("preCosts = " + Arrays.toString(preCosts));
+
+            sb.append(getMaxCost(W, map, buildCosts)).append('\n');
         }
         System.out.println(sb);
     }
-}
 
-class Build {
-
-    int preLevel, level;
-
-    public Build(String pair) {
-        var st = new StringTokenizer(pair);
-        preLevel = parseInt(st.nextToken());
-        level = parseInt(st.nextToken());
-    }
-
-    @Override
-    public String toString() {
-        return "\n" +
-            "level=" + level +
-            ", preLevel=" + preLevel +
-            "}";
+    public static int getMaxCost(int start, Map<Integer, List<Integer>> map, int[] costs) {
+        if (!map.containsKey(start))
+            return costs[start];
+        var max = 0;
+        for (var node : map.get(start)) {
+            var v = getMaxCost(node, map, costs);
+            if (max < v)
+                max = v;
+        }
+        return max + costs[start];
     }
 }
