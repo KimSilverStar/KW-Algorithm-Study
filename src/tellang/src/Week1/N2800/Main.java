@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.TreeSet;
 
 public class Main {
 
@@ -27,7 +28,7 @@ public class Main {
             }
         }
         var size = parentheses.size();
-        var results = new StringBuilder();
+        var set = new TreeSet<String>();
         for (int i = 1; i < pow(2, size); i++) {
             var str = new StringBuilder(s);
             for (int j = 0; j < size; j++) {
@@ -37,9 +38,12 @@ public class Main {
                     str.setCharAt(par.end, ' ');
                 }
             }
-            results.append(str.toString().replaceAll(" ", "")).append('\n');
+            set.add(str.toString().replaceAll(" ", ""));
         }
-        System.out.println(results);
+        var result = new StringBuilder();
+        for (var str: set)
+            result.append(str).append('\n');
+        System.out.println(result);
     }
 }
 
