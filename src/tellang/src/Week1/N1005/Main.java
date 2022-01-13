@@ -5,10 +5,15 @@ import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -47,14 +52,36 @@ public class Main {
     }
 
     public static int getMaxCost(int start, Map<Integer, List<Integer>> map, int[] costs) {
-        if (!map.containsKey(start))
-            return costs[start];
+        var c = new int[costs.length];
+        var stack = new Stack<Pair>();
         var max = 0;
-        for (var node : map.get(start)) {
-            var v = getMaxCost(node, map, costs);
-            if (max < v)
-                max = v;
+        stack.push(new Pair(start, costs[start]));
+        while (!stack.isEmpty()) {
+            var present = stack.pop();
+            if (map.get(present.node) == null) {
+                if (max < present.cost)
+                    max = present.cost;
+            } else {
+                for (var pre : map.get(present.node)) {
+
+                    var cost = costs[pre] + present.cost;
+                    if (c[pre] < cost) {
+                        stack.push(new Pair(pre, cost));
+                        c[pre] = cost;
+                    }
+                }
+            }
         }
-        return max + costs[start];
+        return max;
+    }
+}
+
+class Pair {
+
+    int node, cost;
+
+    public Pair(int node, int cost) {
+        this.node = node;
+        this.cost = cost;
     }
 }
