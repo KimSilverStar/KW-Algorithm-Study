@@ -2,7 +2,7 @@ import sys, heapq
 
 n = int(sys.stdin.readline().rstrip())
 lectures = []
-# 시작시간 오름차순으로 정렬되게 힙에 넣음.
+# 시작시간, 종료시간 오름차순으로 정렬되게 힙에 넣음.
 for _ in range(n):
     data = list(map(int, sys.stdin.readline().rstrip().split()))
     heapq.heappush(lectures, (data[1], data[2]))
