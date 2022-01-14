@@ -27,7 +27,7 @@ public class Main {
             var N = parseInt(st.nextToken());
             var K = parseInt(st.nextToken());
             var buildCosts = new int[N + 1];
-            var map = new LinkedHashMap<Integer, List<Integer>>();
+            var map = new LinkedHashMap<Integer, Queue<Integer>>();
 
             st = new StringTokenizer(br.readLine());
             for (int i = 1; st.hasMoreTokens(); i++) {
@@ -38,7 +38,7 @@ public class Main {
                 var preLevel = parseInt(st.nextToken());
                 var level = parseInt(st.nextToken());
                 if (!map.containsKey(level)) {
-                    var list = new ArrayList<Integer>();
+                    var list = new ArrayDeque<Integer>();
                     list.add(preLevel);
                     map.put(level, list);
                 } else
@@ -51,23 +51,23 @@ public class Main {
         System.out.println(sb);
     }
 
-    public static int getMaxCost(int start, Map<Integer, List<Integer>> map, int[] costs) {
-        var c = new int[costs.length];
+    public static int getMaxCost(int start, Map<Integer, Queue<Integer>> map, int[] costs) {
+        var accumulateCost = costs.clone();
         var stack = new Stack<Pair>();
         var max = 0;
         stack.push(new Pair(start, costs[start]));
         while (!stack.isEmpty()) {
             var present = stack.pop();
-            if (map.get(present.node) == null) {
+            if (map.get(present.node) == null || map.get(present.node).isEmpty()) {
                 if (max < present.cost)
                     max = present.cost;
             } else {
-                for (var pre : map.get(present.node)) {
-
-                    var cost = costs[pre] + present.cost;
-                    if (c[pre] < cost) {
+                while (!map.get(present.node).isEmpty()) {
+                    var pre = map.get(present.node).poll();
+                    var cost = accumulateCost[present.node] + accumulateCost[pre];
+                    if (accumulateCost[pre] < cost) {
                         stack.push(new Pair(pre, cost));
-                        c[pre] = cost;
+                        accumulateCost[pre] = cost;
                     }
                 }
             }
