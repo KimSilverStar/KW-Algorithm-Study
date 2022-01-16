@@ -77,7 +77,7 @@
 
 #### [Taeeon Park](https://github.com/)
 
--   Blog: 
+-   Blog: https://velog.io/@tellang
 -   Email: 
 
 <br/>
