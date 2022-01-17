@@ -19,35 +19,27 @@ public class Main {
             var n = parseInt(br.readLine());
             var st = new StringTokenizer(br.readLine());
             var list = new ArrayList<Integer>();
-            var switchArr = new boolean[n + 1];
+            var isClear = new boolean[n + 1];
             list.add(-1);
             for (int i = 1; i <= n; i++) {
                 list.add(parseInt(st.nextToken()));
             }
             var result = n;
             for (int i = 1; i <= n; i++) {
-                if (switchArr[i])
+                if (isClear[i])
                     continue;
                 var visited = new boolean[n + 1];
                 var stack = new Stack<Integer>();
                 stack.push(i);
-//                visited[i] = true;
                 while (!stack.isEmpty()) {
-                    var peek = stack.peek();
-                    visited[peek] = true;
-                    var next = list.get(peek);
-                    if (switchArr[next])
-                        break;
-                    else if (visited[next]) {
-                        while (!stack.isEmpty()) {
-                            var pop = stack.pop();
-                            switchArr[pop] = true;
+                    var pop = stack.pop();
+                    visited[pop] = true;
+                    var next = list.get(pop);
+                    if (!isClear[next]) {
+                        if (visited[next]) {
                             result--;
-                            if (pop.equals(next))
-                                break;
+                            isClear[next] = true;
                         }
-                        break;
-                    } else {
                         stack.push(next);
                     }
                 }
