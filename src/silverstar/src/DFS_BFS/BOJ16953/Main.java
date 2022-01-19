@@ -1,4 +1,4 @@
-package BOJ16953;
+package DFS_BFS.BOJ16953;
 import java.io.*;
 import java.util.*;
 
