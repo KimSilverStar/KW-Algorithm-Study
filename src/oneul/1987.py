@@ -1,47 +1,34 @@
-import sys, time
-from string import ascii_uppercase
+import sys
+sys.setrecursionlimit(10**6)
 si = sys.stdin.readline
 r, c = map(int, si().rstrip().split())
 grid = [list(si().rstrip()) for _ in range(r)]
 
 
-visited = [[False for _ in range(c)] for _ in range(r)]
-know = {}
-for alpha in ascii_uppercase:
-    know[alpha] = False
+know = set()
 max_depth= 0
 
-def in_range(x, y):
-    global r, c
-    return 0 <= x and x < r and 0 <= y and y < c
+# def in_range(x, y):
+#     return 0 <= x and x < r and 0 <= y and y < c
 
-def can_go(x, y):
-    global visited
-    return in_range(x, y) and not know[grid[x][y]] and not visited[x][y]
+# def can_go(x, y):
+#     global know
+#     return in_range(x, y) and grid[x][y] not in know
 
 def dfs(x, y, depth):
-    global visited, know, max_depth
-    visited[x][y] = True
-    know[grid[x][y]] = True
-    go_somewhere = False
-
-    dxs, dys =[-1, 1, 0, 0], [0, 0, -1, 1]
-    for dx, dy in zip(dxs, dys):
-        new_x, new_y = x + dx, y + dy
-        if can_go(new_x, new_y):
-            go_somewhere = True
-            dfs(new_x, new_y, depth + 1)
-    
-    know[grid[x][y]] = False
-    visited[x][y] = False
-
-    # 처음 온 곳인데 더이상 갈 곳이 없는 경우
-    # (리프 노드인 경우?)
-    if not go_somewhere and max_depth < depth:
+    global know, max_depth
+    if max_depth < depth:
         max_depth = depth
 
-start = time.time()
+    dxs, dys =[-1, 1, 0, 0], [0, 0, -1, 1]
+    for i in range(4):
+        new_x, new_y = x + dxs[i], y + dys[i]
+        # if can_go(new_x, new_y):
+        if 0 <= new_x and new_x < r and 0 <= new_y and new_y < c and grid[new_x][new_y] not in know:
+            know.add(grid[new_x][new_y])
+            dfs(new_x, new_y, depth + 1)
+            know.remove(grid[new_x][new_y])
+
+know.add(grid[0][0])
 dfs(0, 0, 1)
-end = time.time()
-print(f'{end-start:.5f}')
 print(max_depth)
