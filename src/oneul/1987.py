@@ -6,9 +6,7 @@ grid = [list(si().rstrip()) for _ in range(r)]
 
 
 visited = [[False for _ in range(c)] for _ in range(r)]
-know = {}
-for alpha in list(ascii_uppercase):
-    know[alpha] = False
+know = set()
 max_depth= 0
 
 def in_range(x, y):
@@ -17,12 +15,12 @@ def in_range(x, y):
 
 def can_go(x, y):
     global visited
-    return in_range(x, y) and not know[grid[x][y]] and not visited[x][y]
+    return in_range(x, y) and grid[x][y] not in know and not visited[x][y]
 
 def dfs(x, y, depth):
     global visited, know, max_depth
     visited[x][y] = True
-    know[grid[x][y]] = True
+    know.add(grid[x][y])
     go_somewhere = False
 
     dxs, dys =[-1, 1, 0, 0], [0, 0, -1, 1]
@@ -32,10 +30,10 @@ def dfs(x, y, depth):
             go_somewhere = True
             dfs(new_x, new_y, depth + 1)
     
-    know[grid[x][y]] = False
+    know.remove(grid[x][y])
     visited[x][y] = False
 
-    # 처음 왔던 곳인데 더이상 갈 곳이 없는 경우
+    # 처음 온 곳인데 더이상 갈 곳이 없는 경우
     # (리프 노드인 경우?)
     if not go_somewhere and max_depth < depth:
         max_depth = depth
