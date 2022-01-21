@@ -8,26 +8,16 @@ except_case = "FRULA"
 if len(prob_str) < len(bomb_str):
     print(prob_str)
 else:
-    done = True
-    point = 0
-    while done:
-        for ind in range(point, len(prob_str)):
-            if ind+len(bomb_str) > len(prob_str):
-                done = False
-                break
-            if prob_str[ind:ind+len(bomb_str)] == bomb_str:
-                prob_str = prob_str[:ind]+prob_str[ind+len(bomb_str):]
-                point = ind - len(bomb_str) if ind - len(bomb_str) >= 0 else 0
-                break
-            if ind+1 == len(prob_str):
-                done = False
-        if len(prob_str) == 0:
-            done = False
-    if len(prob_str) == 0:
+    prob_stack = []
+    for p_char in prob_str:
+        prob_stack.append(p_char)
+        if p_char == bomb_str[-1] and ''.join(prob_stack[-len(bomb_str):]) == bomb_str:
+            del prob_stack[-len(bomb_str):]
+
+    if len(prob_stack) == 0:
         print(except_case)
     else:
-        print(prob_str)
-
+        print(''.join(prob_stack))
 
 # def div_cq(targetlst, bomb):
 #     hapcount = 0
