@@ -17,43 +17,13 @@ public class Main {
             var counter = 0;
             while (start < end) {
                 if (string[start] != string[end]) {
-                    counter++;
-                    if (counter >= 2) {
+                    counter = 1;
+                    if (check(string, start + 1, end))
                         break;
-                    }
-                    if (string[start + 1] == string[end] && string[start] == string[end - 1]) {
-                        var tieStart = start;
-                        var tieEnd = end;
-                        var isSemiPell = true;
-                        start++;
-                        while (start < end) {
-                            if (string[start] != string[end]) {
-                                isSemiPell = false;
-                                break;
-                            }
-                            start++;
-                            end--;
-                        }
-                        if (isSemiPell)
-                            break;
-                        start = tieStart;
-                        end = tieEnd - 1;
-                        while (start < end) {
-                            if (string[start] != string[end]) {
-                                counter = 2;
-                                break;
-                            }
-                            start++;
-                            end--;
-                        }
-                    } else if (string[start + 1] == string[end]) {
-                        start++;
-                    } else if (string[start] == string[end - 1]) {
-                        end--;
-                    } else {
-                        counter++;
+                    else if (check(string, start, end - 1))
                         break;
-                    }
+                    counter = 2;
+                    break;
                 }
                 start++;
                 end--;
@@ -61,5 +31,16 @@ public class Main {
             sb.append(counter).append('\n');
         }
         System.out.println(sb);
+    }
+
+    private static boolean check(char[] string, int start, int end) {
+        while (start < end) {
+            if (string[start] != string[end]) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
     }
 }
