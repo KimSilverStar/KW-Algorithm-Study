@@ -10,9 +10,9 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    final static char VOID = '0', WALL = '1', VISITED = '2';
+    final static int VOID = 0, WALL = 1, VISITED = 2;
     static int N, M;
-    static char[][] map;
+    static int[][] map, afterBreackMap;
 
     public static void main(String[] args) throws IOException {
         var br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,59 +20,72 @@ public class Main {
         var move = new int[]{0, 1, 0, -1, 0};
         N = parseInt(st.nextToken());
         M = parseInt(st.nextToken());
-        map = new char[N][M];
+        map = new int[N][M];
+        afterBreackMap = new int[N][M];
         for (int y = 0; y < N; y++) {
-            map[y] = br.readLine().toCharArray();
+            var arr = br.readLine().toCharArray();
+            for (int x = 0; x < M; x++) {
+                int num = arr[x] - '0';
+                map[y][x] = num;
+                afterBreackMap[y][x] = num;
+            }
         }
 
         var q = new ArrayDeque<Position>();
         var bq = new ArrayDeque<Position>();
         map[0][0] = VISITED;
+        afterBreackMap[0][0] = VISITED;
         q.offer(new Position(0, 0, 1, false));
         var result = -1;
         while (!(q.isEmpty() && bq.isEmpty())) {
-            Position poll;
+
             if (!q.isEmpty()) {
-                poll = q.poll();
+                var poll = q.poll();
                 if (poll.y == N - 1 && poll.x == M - 1) {
                     result = poll.step;
                     q.clear();
                     continue;
                 }
                 for (int i = 0; i < 4; i++) {
-                    if (isValid(poll, move[i], move[i + 1])) {
-                        if (getStatus(poll, move[i], move[i + 1]) == WALL) {
+                    var y = poll.y + move[i];
+                    var x = poll.x + move[i + 1];
+                    if (isValid(y, x) && map[y][x] < VISITED) {
+                        if (map[y][x] == WALL) {
                             if (!poll.didBreak) {
                                 var next = new Position(poll, move[i], move[i + 1]);
-                                next.didBreak = true;
-                                map[next.y][next.x] = (char) (VISITED + next.step);
+                                afterBreackMap[next.y][next.x] = (VISITED + next.step);
                                 bq.offer(next);
                             }
                         } else {
                             var next = new Position(poll, move[i], move[i + 1]);
-                            map[next.y][next.x] = (char) (VISITED + next.step);
+                            map[next.y][next.x] = (VISITED + next.step);
+                            afterBreackMap[next.y][next.x] = (VISITED + next.step);
                             q.offer(next);
                         }
 
                     }
                 }
             } else {
-                poll = bq.poll();
+                var poll = bq.poll();
                 if (poll.y == N - 1 && poll.x == M - 1) {
                     if ((poll.step < result) || result == -1)
                         result = poll.step;
-//                    break;
                 }
                 for (int i = 0; i < 4; i++) {
-                    if (isValid(poll, move[i], move[i + 1])) {
-                        char status = getStatus(poll, move[i], move[i + 1]);
-                        if ((status == VOID) || (status != WALL && (status > (VISITED + poll.step
-                            + 1)))) {
-                            var next = new Position(poll, move[i], move[i + 1]);
-                            map[next.y][next.x] = (char) (VISITED + next.step);
-                            bq.offer(next);
+                    var y = poll.y + move[i];
+                    var x = poll.x + move[i + 1];
+                    if (isValid(y, x)) {
+                        if (map[y][x] != WALL) {
+                            if (afterBreackMap[y][x] == VOID) {
+                                var next = new Position(poll, move[i], move[i + 1]);
+                                afterBreackMap[y][x] = (VISITED + next.step);
+                                bq.offer(next);
+                            } else if (afterBreackMap[y][x] > poll.step + VISITED + 1) {
+                                var next = new Position(poll, move[i], move[i + 1]);
+                                afterBreackMap[y][x] = (VISITED + next.step);
+                                bq.offer(next);
+                            }
                         }
-
                     }
                 }
             }
@@ -82,18 +95,9 @@ public class Main {
         System.out.println(result);
     }
 
-    static char getStatus(Position ori, int yOffset, int xOffset) {
-        var y = ori.y + yOffset;
-        var x = ori.x + xOffset;
-        return map[y][x];
-    }
-
-    static boolean isValid(Position ori, int yOffset, int xOffset) {
-        var y = ori.y + yOffset;
-        var x = ori.x + xOffset;
+    static boolean isValid(int y, int x) {
         return y >= 0 && y < N &&
-            x >= 0 && x < M &&
-            map[y][x] < VISITED;
+            x >= 0 && x < M;
     }
 }
 
