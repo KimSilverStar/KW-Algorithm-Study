@@ -27,20 +27,20 @@ public class Main {
             key = st.nextToken();
             map.put(key, new Tree(st.nextToken(), st.nextToken()));
         }
-        preorder(root);
+        order(root);
         pre.append('\n').append(in).append('\n').append(post);
         System.out.println(pre);
     }
 
-    static void preorder(String root) {
+    static void order(String root) {
         var head = map.get(root);
         pre.append(root);
         if (!head.left.equals(".")) {
-            preorder(head.left);
+            order(head.left);
         }
         in.append(root);
         if (!head.right.equals(".")) {
-            preorder(head.right);
+            order(head.right);
         }
         post.append(root);
     }
