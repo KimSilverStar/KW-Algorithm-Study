@@ -29,7 +29,8 @@ for i in range(len(gwal_tuple_lst)):
                 continue
             else:
                 new_formula += i_formula[chr]
-        main_lst.append(new_formula)
+        if new_formula not in main_lst:
+            main_lst.append(new_formula)
 
 main_lst.sort()
 for formula in main_lst:
