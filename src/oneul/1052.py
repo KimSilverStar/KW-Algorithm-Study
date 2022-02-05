@@ -1,5 +1,6 @@
-# 예제 다 되지만 시간초과
-import sys, heapq
+# idea from tellang
+# https://github.com/KimSilverStar/KW-Algorithm-Study/blob/main/src/tellang/src/Week4/N1052/Main.java
+import sys
 
 
 # 입력 받기
@@ -7,37 +8,28 @@ si = sys.stdin.readline
 n, k = map(int, si().rstrip().split())
 
 
-# priority q 생성
-pq = [1 for _ in range(n)]
 buy = 0
-temp = []
+bit_length = len(str(bin(n))[2:])
 
-# pq가 비지 않은 동안 반복
-while pq:
-    left_hand = heapq.heappop(pq)
-    right_hand = 0
+for i in range(bit_length-1, -1, -1):
+    # bit 하나 구하기
+    bit = (n >> i)
 
-    if pq: # pq가 비지 않았을 때
-        right_hand = heapq.heappop(pq)
-
-    if left_hand == right_hand:
-        heapq.heappush(pq, left_hand*2)
-    else:
-        temp.append(left_hand)
-        if right_hand:
-            heapq.heappush(pq, right_hand)
+    # bit 가 1이면 물병 1개 존재
+    if (bit & 1) == 1:
+        k -= 1
     
-    if not pq: # pq가 비었을 때(최대 값까지 확인한 경우)
-        if len(temp) > k: # 아직 옮길 수 없는 경우
-            # 병 1개 구매
-            buy += 1
-            temp.append(1)
-
-            # pq, temp 초기화
-            heapq.heapify(temp)
-            pq = temp
-            temp = []
-        else: # 옮길 수 있는 경우
+    # 물병 k개를 다 채웠다면
+    if not k:
+        # 원래 비트랑 같으면 구매할 필요 없음.
+        if bit << i == n:
             break
+        
+        # bit에 1을 더해서 원위치 시키면 물병을 최소로 구매 후
+        # k개 이하로 물병을 남긴 것.
+        # 여기에 n을 빼면 최소로 구매한 물병 개수가 됨.
+        buy = (((bit + 1) << i) - n)
+        break
+
 
 print(buy)
