@@ -11,6 +11,8 @@ def bfs(i, t, count, ar):
     elif i > t:
         return
     else:
+        # i*2, i*10+1 check
+
         bfs(i*2, t, count+1, ar)
         bfs(i*10+1, t, count+1, ar)
 

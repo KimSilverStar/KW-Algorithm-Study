@@ -13,6 +13,8 @@ else:
         prob_stack.append(p_char)
         if p_char == bomb_str[-1] and ''.join(prob_stack[-len(bomb_str):]) == bomb_str:
             del prob_stack[-len(bomb_str):]
+        # 12343434
+        # 34
 
     if len(prob_stack) == 0:
         print(except_case)
