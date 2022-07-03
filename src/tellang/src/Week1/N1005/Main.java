@@ -7,13 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -26,62 +19,44 @@ public class Main {
             var st = new StringTokenizer(br.readLine());
             var N = parseInt(st.nextToken());
             var K = parseInt(st.nextToken());
-            var buildCosts = new int[N + 1];
-            var map = new LinkedHashMap<Integer, Queue<Integer>>();
+            var costs = new int[N + 1];
+            var dp = new int[N + 1];
+            var map = new ArrayList<ArrayList<Integer>>();
+            var result = 0;
 
             st = new StringTokenizer(br.readLine());
-            for (int i = 1; st.hasMoreTokens(); i++) {
-                buildCosts[i] = parseInt(st.nextToken());
+            map.add(new ArrayList<>());
+
+            for (int i = 1; i <= N; i++) {
+                costs[i] = parseInt(st.nextToken());
+                map.add(new ArrayList<>());
             }
             for (int i = 0; i < K; i++) {
                 st = new StringTokenizer(br.readLine());
                 var preLevel = parseInt(st.nextToken());
                 var level = parseInt(st.nextToken());
-                if (!map.containsKey(level)) {
-                    var list = new ArrayDeque<Integer>();
-                    list.add(preLevel);
-                    map.put(level, list);
-                } else
-                    map.get(level).add(preLevel);
+                map.get(level).add(preLevel);
             }
             var W = parseInt(br.readLine());
-
-            sb.append(getMaxCost(W, map, buildCosts)).append('\n');
-        }
-        System.out.println(sb);
-    }
-
-    public static int getMaxCost(int start, Map<Integer, Queue<Integer>> map, int[] costs) {
-        var accumulateCost = costs.clone();
-        var stack = new Stack<Pair>();
-        var max = 0;
-        stack.push(new Pair(start, costs[start]));
-        while (!stack.isEmpty()) {
-            var present = stack.pop();
-            if (map.get(present.node) == null || map.get(present.node).isEmpty()) {
-                if (max < present.cost)
-                    max = present.cost;
-            } else {
-                while (!map.get(present.node).isEmpty()) {
-                    var pre = map.get(present.node).poll();
-                    var cost = accumulateCost[present.node] + accumulateCost[pre];
-                    if (accumulateCost[pre] < cost) {
-                        stack.push(new Pair(pre, cost));
-                        accumulateCost[pre] = cost;
+            dp[W] = costs[W];
+            var q = new ArrayDeque<Integer>();
+            q.offer(W);
+            while (!q.isEmpty()) {
+                var pre = q.poll();
+                var size = map.get(pre).size();
+                if (size == 0)
+                    result = Math.max(result, dp[pre]);
+                else {
+                    for (var next : map.get(pre)) {
+                        if (dp[next] < (costs[next] + dp[pre])) {
+                            dp[next] = (costs[next] + dp[pre]);
+                            q.offer(next);
+                        }
                     }
                 }
             }
+            sb.append(result).append('\n');
         }
-        return max;
-    }
-}
-
-class Pair {
-
-    int node, cost;
-
-    public Pair(int node, int cost) {
-        this.node = node;
-        this.cost = cost;
+        System.out.println(sb);
     }
 }
